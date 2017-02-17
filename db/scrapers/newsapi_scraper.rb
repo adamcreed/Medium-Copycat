@@ -1,9 +1,6 @@
-require 'dotenv/load'
 require 'httparty'
 require 'nokogiri'
-require 'json'
-require 'pry'
-require 'csv'
+
 
 api_key = ENV['NEWSAPI_KEY']
 sources_page = HTTParty.get 'https://newsapi.org/sources'
@@ -20,14 +17,16 @@ news_sources.each do |news_source|
   stories = HTTParty.get "https://newsapi.org/v1/articles?source=#{news_source}&sortBy=top&apiKey=#{api_key}"
 
   if stories['status'] == 'ok'
-  stories['articles'].each do |story|
-    Article.create(
-      author: story['author'],
-      title: story['title'],
-      description: story['description'],
-      url: story['url'],
-      url_to_image: story['urlToImage'],
-      published_at: story['publishedAt'][date_regex]
-    )
+    stories['articles'].each do |story|
+      story['publishedAt'] = story['publishedAt'] || '1999-09-09'
+      Article.create(
+        author: story['author'],
+        title: story['title'],
+        description: story['description'],
+        url: story['url'],
+        url_to_image: story['urlToImage'],
+        published_at: story['publishedAt'][date_regex]
+      )
+    end
   end
 end
