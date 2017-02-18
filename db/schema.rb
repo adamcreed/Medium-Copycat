@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216213716) do
+ActiveRecord::Schema.define(version: 20170218192656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,8 +22,10 @@ ActiveRecord::Schema.define(version: 20170216213716) do
     t.string   "url"
     t.string   "url_to_image"
     t.string   "published_at"
+    t.string   "source_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.index ["source_id"], name: "index_articles_on_source_id", using: :btree
   end
 
   create_table "comments", force: :cascade do |t|
@@ -34,7 +36,7 @@ ActiveRecord::Schema.define(version: 20170216213716) do
     t.datetime "updated_at",        null: false
   end
 
-  create_table "sources", force: :cascade do |t|
+  create_table "sources", id: :string, force: :cascade do |t|
     t.string   "name"
     t.string   "description"
     t.string   "url"

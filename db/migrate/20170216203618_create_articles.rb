@@ -7,6 +7,7 @@ class CreateArticles < ActiveRecord::Migration[5.0]
       t.string :url
       t.string :url_to_image
       t.string :published_at
+      t.belongs_to :source
 
       t.timestamps
     end
