@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :marks
   resources :articles do
     resources :comments
   end

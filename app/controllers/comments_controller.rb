@@ -1,30 +1,33 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: [:show, :update, :destroy]
 
-  # GET /comments
+  # GET /articles/:article_id/comments
   def index
-    @comments = Comment.all
+    @comments = Comment.where(article_id: params[:article_id]).map do |comment|
+      comment_with_ratings(comment)
+    end
 
     render json: @comments
   end
 
-  # GET /comments/1
+  # GET /articles/:article_id/comments/1
   def show
-    render json: @comment
+    render json: comment_with_ratings(@comment)
   end
 
-  # POST /comments
+  # POST /articles/:article_id/comments
   def create
     @comment = Comment.new(comment_params)
-
+    @comment.parent_comment_id = 0 if @comment.parent_comment_id.blank?
+    byebug
     if @comment.save
-      render json: @comment, status: :created, location: @comment
+      render json: @comment, status: :created # , location: @comment
     else
       render json: @comment.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /comments/1
+  # PATCH/PUT /articles/:article_id/comments/1
   def update
     if @comment.update(comment_params)
       render json: @comment
@@ -33,7 +36,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  # DELETE /comments/1
+  # DELETE /articles/:article_id/comments/1
   def destroy
     @comment.destroy
   end
@@ -44,8 +47,18 @@ class CommentsController < ApplicationController
       @comment = Comment.find(params[:id])
     end
 
+    def comment_with_ratings(comment)
+    favorite_count = Mark.where(comment_id: comment.id).count
+    {
+      comment: comment,
+      favorites: {
+        count: favorite_count,
+        favorited: not(favorite_count.zero?)
+      }
+    }
+    end
     # Only allow a trusted parameter "white list" through.
     def comment_params
-      params.require(:comment).permit(:author_name, :content, :parent_comment_id)
+      params.require(:comment).permit(:author_name, :content, :parent_comment_id, :article_id)
     end
 end
