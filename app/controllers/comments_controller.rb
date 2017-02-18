@@ -19,7 +19,7 @@ class CommentsController < ApplicationController
   def create
     @comment = Comment.new(comment_params)
     @comment.parent_comment_id = 0 if @comment.parent_comment_id.blank?
-    byebug
+
     if @comment.save
       render json: @comment, status: :created # , location: @comment
     else
