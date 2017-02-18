@@ -1,3 +1,4 @@
 class Article < ApplicationRecord
-  belongs_to :source, foreign_type: :string
+  belongs_to :source
+  has_many :comments
 end
