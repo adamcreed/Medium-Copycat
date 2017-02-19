@@ -7,6 +7,7 @@ end
 
 gem 'dotenv-rails'
 gem 'httparty'
+gem 'kaminari'
 gem 'nokogiri'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
