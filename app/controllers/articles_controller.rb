@@ -9,8 +9,6 @@ class ArticlesController < ApplicationController
       article_with_stats(article)
     end
 
-    @articles << { total_pages: Article.page(1).total_pages }
-
     render json: @articles
   end
 
@@ -62,6 +60,7 @@ class ArticlesController < ApplicationController
         bookmarked: not(bookmark_count.zero?)
       },
       number_of_comments: Comment.where(article_id: article.id).count
+      total_pages: Article.page(1).total_pages
     }
     end
 
