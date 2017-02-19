@@ -3,16 +3,19 @@ class ArticlesController < ApplicationController
 
   # GET /articles
   def index
-    @articles = Article.all.map do |article|
-      article_with_ratings(article)
+    page = params.fetch 'page', 1
+    @articles = Article.page(page).map do |article|
+      article_with_stats(article)
     end
+
+    @articles << { total_pages: Article.page(1).total_pages }
 
     render json: @articles
   end
 
   # GET /articles/1
   def show
-    render json: article_with_ratings(@article)
+    render json: article_with_stats(@article)
   end
 
   # POST /articles
@@ -47,14 +50,15 @@ class ArticlesController < ApplicationController
       @article = Article.find(params[:id])
     end
 
-    def article_with_ratings(article)
-    favorite_count = Mark.where(article_id: article.id).count
+    def article_with_stats(article)
+    favorite_count = Mark.where('article_id = ? AND favorited = true', article.id).count
     {
       article: article,
       favorites: {
         count: favorite_count,
         favorited: not(favorite_count.zero?)
-      }
+      },
+      number_of_comments: Comment.where(article_id: article.id).count
     }
     end
 

@@ -39,7 +39,7 @@ ActiveRecord::Schema.define(version: 20170218202853) do
   end
 
   create_table "marks", force: :cascade do |t|
-    t.boolean  "liked"
+    t.boolean  "favorited"
     t.boolean  "bookmarked"
     t.integer  "comment_id"
     t.integer  "article_id"

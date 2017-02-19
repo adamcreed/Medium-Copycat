@@ -3,8 +3,9 @@ class CommentsController < ApplicationController
 
   # GET /articles/:article_id/comments
   def index
-    @comments = Comment.where(article_id: params[:article_id]).map do |comment|
-      comment_with_ratings(comment)
+    page = params.fetch 'page', 1
+    @comments = Comment.where(article_id: params[:article_id]).page(page).map do |comment|
+      comment_with_stats(comment)
     end
 
     render json: @comments
@@ -12,7 +13,7 @@ class CommentsController < ApplicationController
 
   # GET /articles/:article_id/comments/1
   def show
-    render json: comment_with_ratings(@comment)
+    render json: comment_with_stats(@comment)
   end
 
   # POST /articles/:article_id/comments
@@ -47,14 +48,16 @@ class CommentsController < ApplicationController
       @comment = Comment.find(params[:id])
     end
 
-    def comment_with_ratings(comment)
+    def comment_with_stats(comment)
     favorite_count = Mark.where(comment_id: comment.id).count
     {
       comment: comment,
       favorites: {
         count: favorite_count,
         favorited: not(favorite_count.zero?)
-      }
+      },
+      number_of_replies: Comment.where(parent_comment_id: comment.id).count,
+      total_pages: Comment.where(parent_comment_id: comment.id).page(1).total_pages
     }
     end
     # Only allow a trusted parameter "white list" through.

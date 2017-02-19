@@ -48,6 +48,6 @@ class MarksController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def mark_params
-      params.require(:mark).permit(:liked, :bookmarked, :comment_id, :article_id)
+      params.require(:mark).permit(:favorited, :bookmarked, :comment_id, :article_id)
     end
 end
