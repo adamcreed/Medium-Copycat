@@ -5,7 +5,8 @@ class ArticlesController < ApplicationController
   def index
     page = params.fetch 'page', 1
     per = params.fetch 'per_page', 15
-    @articles = Article.page(page).per(per).map do |article|
+    @articles = Article.all
+    @articles = @articles.page(page).per(per).map do |article|
       article_with_stats(article)
     end
 
@@ -47,21 +48,6 @@ class ArticlesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_article
       @article = Article.find(params[:id])
-    end
-
-    def article_with_stats(article)
-      favorite_count = Mark.where('article_id = ? AND favorited = true', article.id).count
-      bookmark_count = Mark.where('article_id = ? AND bookmarked = true', article.id).count
-      {
-        article: article,
-        favorites: {
-          count: favorite_count,
-          favorited: not(favorite_count.zero?),
-          bookmarked: not(bookmark_count.zero?)
-        },
-        number_of_comments: Comment.where(article_id: article.id).count,
-        total_pages: Article.page(1).total_pages
-      }
     end
 
     # Only allow a trusted parameter "white list" through.
