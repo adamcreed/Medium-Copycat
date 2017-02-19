@@ -12,7 +12,7 @@ class MarksControllerTest < ActionDispatch::IntegrationTest
 
   test "should create mark" do
     assert_difference('Mark.count') do
-      post marks_url, params: { mark: { article_id: @mark.article_id, bookmarked: @mark.bookmarked, comment_id: @mark.comment_id, liked: @mark.liked } }, as: :json
+      post marks_url, params: { mark: { article_id: @mark.article_id, bookmarked: @mark.bookmarked, comment_id: @mark.comment_id, favorited: @mark.favorited } }, as: :json
     end
 
     assert_response 201
@@ -24,7 +24,7 @@ class MarksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update mark" do
-    patch mark_url(@mark), params: { mark: { article_id: @mark.article_id, bookmarked: @mark.bookmarked, comment_id: @mark.comment_id, liked: @mark.liked } }, as: :json
+    patch mark_url(@mark), params: { mark: { article_id: @mark.article_id, bookmarked: @mark.bookmarked, comment_id: @mark.comment_id, favorited: @mark.favorited } }, as: :json
     assert_response 200
   end
 

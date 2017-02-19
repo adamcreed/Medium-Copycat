@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  liked: false
+  favorited: false
   bookmarked: false
   comment: one
   article: one
 
 two:
-  liked: false
+  favorited: false
   bookmarked: false
   comment: two
   article: two
