@@ -4,6 +4,7 @@ class CommentsController < ApplicationController
   # GET /articles/:article_id/comments
   def index
     page = params.fetch 'page', 1
+    per = params.fetch 'per_page', 15
     @comments = Comment.where(article_id: params[:article_id]).page(page).map do |comment|
       comment_with_stats(comment)
     end

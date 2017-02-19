@@ -4,7 +4,8 @@ class ArticlesController < ApplicationController
   # GET /articles
   def index
     page = params.fetch 'page', 1
-    @articles = Article.page(page).map do |article|
+    per = params.fetch 'per_page', 15
+    @articles = Article.page(page).per(per).map do |article|
       article_with_stats(article)
     end
 
