@@ -26,5 +26,9 @@ module MediumCopycat
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    config.action_dispatch.default_headers = {
+      'Access-Control-Allow-Origin' => 'https://n-bryant.github.io/tiy-fee-week6-weekendProj-mediumCopyCat/',
+      'Access-Control-Request-Method' => %w{GET POST PUT PATCH DELETE OPTIONS}.join(",")
+    }
   end
 end
