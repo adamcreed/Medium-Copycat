@@ -1,4 +1,4 @@
 class Comment < ApplicationRecord
   belongs_to :article
-  has_many :marks
+  has_many :marks, dependent: :destroy
 end
