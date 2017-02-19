@@ -49,16 +49,18 @@ class CommentsController < ApplicationController
     end
 
     def comment_with_stats(comment)
-    favorite_count = Mark.where(comment_id: comment.id).count
-    {
-      comment: comment,
-      favorites: {
-        count: favorite_count,
-        favorited: not(favorite_count.zero?)
-      },
-      number_of_replies: Comment.where(parent_comment_id: comment.id).count,
-      total_pages: Comment.where(parent_comment_id: comment.id).page(1).total_pages
-    }
+      favorite_count = Mark.where('comment_id = ? AND favorited = true', comment.id).count
+      bookmark_count = Mark.where('comment_id = ? AND bookmarked = true', comment.id).count
+      {
+        comment: comment,
+        favorites: {
+          count: favorite_count,
+          favorited: not(favorite_count.zero?),
+          bookmarked: not(bookmark_count.zero?)
+        },
+        number_of_replies: Comment.where(parent_comment_id: comment.id).count,
+        total_pages: Comment.where(parent_comment_id: comment.id).page(1).total_pages
+      }
     end
     # Only allow a trusted parameter "white list" through.
     def comment_params
