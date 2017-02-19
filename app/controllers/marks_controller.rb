@@ -18,6 +18,9 @@ class MarksController < ApplicationController
     @mark = Mark.new(mark_params)
     @mark.article_id = 0 if @mark.article_id.blank?
     @mark.comment_id = 0 if @mark.comment_id.blank?
+    @mark.favorited = false if @mark.favorited.blank?
+    @mark.bookmarked = false if @mark.bookmarked.blank?
+
 
     if @mark.save
       render json: @mark, status: :created, location: @mark
@@ -37,13 +40,21 @@ class MarksController < ApplicationController
 
   # DELETE /marks/1
   def destroy
-    @mark.destroy
+    if @mark.blank?
+      render json: @mark, status: :unprocessable_entity
+    else
+      @mark.destroy
+    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_mark
-      @mark = Mark.find(params[:id])
+      params[:mark][:article_id] = 0 if params[:mark][:article_id].blank?
+      params[:mark][:comment_id] = 0 if params[:mark][:comment_id].blank?
+      params[:mark][:favorited] = false if params[:mark][:favorited].blank?
+      params[:mark][:bookmarked] = false if params[:mark][:bookmarked].blank?
+      @mark = Mark.find_by("article_id = ? AND comment_id = ? AND favorited = ? AND bookmarked = ?", params[:mark][:article_id], params[:mark][:comment_id], params[:mark][:favorited], params[:mark][:bookmarked])
     end
 
     # Only allow a trusted parameter "white list" through.
