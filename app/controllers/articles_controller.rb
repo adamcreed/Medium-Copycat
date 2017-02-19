@@ -4,7 +4,7 @@ class ArticlesController < ApplicationController
   # GET /articles
   def index
     page = params.fetch 'page', 1
-    per = params.fetch 'per_page', 15
+    @per = params.fetch 'per_page', 15
     @articles = Article.all
     @articles = @articles.page(page).per(per).map do |article|
       article_with_stats(article)
@@ -21,8 +21,7 @@ class ArticlesController < ApplicationController
   # POST /articles
   def create
     @article = Article.new(article_params)
-    @article.published_at = Date.today.to_s if @article.published_at.blank?
-
+    
     if @article.save
       render json: @article, status: :created, location: @article
     else

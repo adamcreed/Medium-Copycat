@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170218202853) do
+ActiveRecord::Schema.define(version: 20170219154645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,30 +21,30 @@ ActiveRecord::Schema.define(version: 20170218202853) do
     t.string   "title"
     t.string   "url"
     t.string   "url_to_image"
-    t.string   "published_at"
-    t.string   "source_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string   "published_at", default: -> { "to_char(now(), 'YYYY-MM-DD'::text)" }
+    t.string   "source_id",    default: "other"
+    t.datetime "created_at",                                                         null: false
+    t.datetime "updated_at",                                                         null: false
     t.index ["source_id"], name: "index_articles_on_source_id", using: :btree
   end
 
   create_table "comments", force: :cascade do |t|
     t.string   "author_name"
     t.text     "content"
-    t.integer  "parent_comment_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.integer  "parent_comment_id", default: 0
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
     t.integer  "article_id"
     t.index ["article_id"], name: "index_comments_on_article_id", using: :btree
   end
 
   create_table "marks", force: :cascade do |t|
-    t.boolean  "favorited"
-    t.boolean  "bookmarked"
-    t.integer  "comment_id"
-    t.integer  "article_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "favorited",  default: false
+    t.boolean  "bookmarked", default: false
+    t.integer  "comment_id", default: 0
+    t.integer  "article_id", default: 0
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["article_id"], name: "index_marks_on_article_id", using: :btree
     t.index ["comment_id"], name: "index_marks_on_comment_id", using: :btree
   end
