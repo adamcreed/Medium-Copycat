@@ -1,6 +1,11 @@
 require 'httparty'
 require 'nokogiri'
 
+def main
+  scrape_sources
+  scrape_articles
+end
+
 def scrape_sources
   sources_page = HTTParty.get 'https://newsapi.org/v1/sources'
 
@@ -84,5 +89,4 @@ def set_author(author, source_name)
   author.blank? ? source_name : author
 end
 
-scrape_sources
-scrape_articles
+main
